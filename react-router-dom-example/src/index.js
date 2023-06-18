@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import {BrowserRouter as Router, Routes, Route, Link, NavLink} from 'react-router-dom';
+import {BrowserRouter as Router, Routes, Route, Link, NavLink, useParams} from 'react-router-dom';
 
 function Home() {
   return (
@@ -20,10 +20,22 @@ const contents = [
 ]
 
 function Topic() {
+  const params = useParams();
+  const topic_id = params.topic_id
+  let selected_topic = {
+    title:'Sorry',
+    description:'Not Found',
+  }
+  for (let i=0; i<contents.length; i++) {
+    if (contents[i].id === Number(topic_id)) {
+      selected_topic = contents[i]
+      break
+    }
+  }
   return (
     <div>
-      <h3>Topic</h3>
-      Topic...
+      <h3>{selected_topic.title}</h3>
+      {selected_topic.description}
     </div>
   )
 }
@@ -31,7 +43,7 @@ function Topic() {
 function Topics() {
   const lis = []
   for (let i=0; i<contents.length; i++ ){
-    lis.push(<li><NavLink to={'/topics/'+contents[i].id}>{contents[i].title}</NavLink></li>)
+    lis.push(<li key={contents[i].id}><NavLink to={'/topics/'+contents[i].id}>{contents[i].title}</NavLink></li>)
   }
   return (
     <div>
@@ -40,7 +52,7 @@ function Topics() {
         {lis}
       </ul>
       <Routes>
-        <Route path='/:topics_id' element={<Topic />}></Route>
+        <Route path='/:topic_id' element={<Topic />}></Route>
       </Routes>
       {/* <Routes>
         <Route path="/1" element={<div>HTML is ...</div>}></Route>
